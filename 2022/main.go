@@ -6,4 +6,5 @@ import (
 
 func main(){
 	One.Pt1()
+	One.Pt2()
 }
