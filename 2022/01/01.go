@@ -1,4 +1,4 @@
-package One
+package one
 
 import (
 	"bufio"

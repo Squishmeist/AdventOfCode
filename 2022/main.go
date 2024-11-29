@@ -1,10 +1,7 @@
 package main
 
-import (
-	One "2022/01"
-)
+import two "2022/02"
 
 func main(){
-	One.Pt1()
-	One.Pt2()
+	two.Pt1()
 }
