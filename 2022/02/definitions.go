@@ -1,6 +1,19 @@
 package two
 
-/* shape
+/* pt1
+
+o p
+A X Rock 1
+B Y Paper 2
+C Z Scissors 3
+
+L 0
+D 3
+W 6
+
+*/
+
+/* pt2
 
 o p
 A X Rock 1
@@ -31,19 +44,6 @@ type Rules struct {
     Draw int
     Win  int
 }
-
-var oShape = Shape{
-    Rock:     "A",
-    Paper:    "B",
-    Scissors: "C",
-}
-
-var pShape = Shape{
-    Rock:     "X",
-    Paper:    "Y",
-    Scissors: "Z",
-}
-
 
 var shapeRules = ShapeRules{
 	Rock:     1,
