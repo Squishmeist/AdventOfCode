@@ -1,10 +1,9 @@
 package main
 
 import (
-	three "2022/03"
+	four "2022/04"
 )
 
 func main(){
-	three.Pt1()
-	three.Pt2()
+	four.Pt1()
 }
