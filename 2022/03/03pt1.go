@@ -6,6 +6,26 @@ import (
 	"os"
 )
 
+func Pt1(){
+	file, err := os.Open("./03/03.txt")
+    check(err)
+    defer file.Close()
+
+	score := 0
+
+    scanner := bufio.NewScanner(file)
+    for scanner.Scan() {
+        line := scanner.Text()
+		first, second := splitStringInHalf(line)
+		common := common(first, second)
+		if common != "" {
+            score += priority(rune(common[0]))
+        }
+    }
+    check(scanner.Err())
+	fmt.Println("3pt1:", score)
+}
+
 func splitStringInHalf(s string) (string, string) {
     mid := len(s) / 2
     return s[:mid], s[mid:]
@@ -33,25 +53,6 @@ func priority(char rune) int {
     return 0
 }
 
-func Pt1(){
-	file, err := os.Open("./03/03.txt")
-    check(err)
-    defer file.Close()
-
-	score := 0
-
-    scanner := bufio.NewScanner(file)
-    for scanner.Scan() {
-        line := scanner.Text()
-		first, second := splitStringInHalf(line)
-		common := common(first, second)
-		if common != "" {
-            score += priority(rune(common[0]))
-        }
-    }
-    check(scanner.Err())
-	fmt.Println("3pt1:", score)
-}
 
 func check(e error) {
     if e != nil {
