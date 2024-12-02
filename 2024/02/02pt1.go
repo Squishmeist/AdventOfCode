@@ -19,7 +19,7 @@ func Pt1(){
     for scanner.Scan() {
         line := scanner.Text()
 		s := strings.Split(line, " ")
-		nums := toInt(s)
+		nums := toInts(s)
 		result := isSafe(nums)
 		if result {
 			score++
@@ -51,30 +51,31 @@ func differ (x int, y int) bool {
 	z := abs(x - y)
 	if z >= 1 && z <= 3 {
 		return true
-	}else {
-		return false
 	}
+	return false
 }
 
 func order(x int, y int) int {
 	if x < y {
 		return 1
-	} else if x > y {
+	} 
+	
+	if x > y {
 		return 2
-	} else{
-		return 0
 	}
+	
+	return 0
+	
 }
 
 func abs (x int) int {
 	if x < 0 {
 		return -x
-	}else {
-		return x
 	}
+	return x
 }
 
-func toInt(s []string) []int {
+func toInts(s []string) []int {
 	var n []int
 	for _, v := range s {
 		i, err := strconv.Atoi(v)

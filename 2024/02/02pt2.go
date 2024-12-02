@@ -18,7 +18,7 @@ func Pt2(){
     for scanner.Scan() {
         line := scanner.Text()
 		s := strings.Split(line, " ")
-		nums := toInt(s)
+		nums := toInts(s)
 		result := dampender(nums)
 		if result {
 			score++
