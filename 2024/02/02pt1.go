@@ -20,7 +20,7 @@ func Pt1(){
         line := scanner.Text()
 		s := strings.Split(line, " ")
 		nums := toInt(s)
-		result := process(nums)
+		result := isSafe(nums)
 		if result {
 			score++
 		}
@@ -29,34 +29,27 @@ func Pt1(){
 	fmt.Println("2pt1:", score)
 }
 
-func process(levels []int)bool{
-	bob := 0
+func isSafe(levels []int)bool{
+	lOrder := 0
 
-	for i, x := range levels {
-        if i != len(levels)-1 {
-            y := levels[i+1]
-
-            if i == 0 {
-                bob = order(x, y)
-            }
-
-			if bob != order(x, y) {
-				return false
-			}
-
-            if !differ(x, y) {
-                return false
-            }
-        }
-    }
-
+	for i := 0; i < len(levels)-1; i++ {
+		x := levels[i]
+		y := levels[i+1]
+	
+		if i == 0 {
+			lOrder = order(x, y)
+		}
+	
+		if lOrder != order(x, y) || !differ(x, y) {
+			return false
+		}
+	}
 	return true
 }
 
 func differ (x int, y int) bool {
-	val := abs(x - y)
-
-	if val >= 1 && val <= 3 {
+	z := abs(x - y)
+	if z >= 1 && z <= 3 {
 		return true
 	}else {
 		return false
@@ -81,14 +74,14 @@ func abs (x int) int {
 	}
 }
 
-func toInt(l []string) []int {
-	var r []int
-	for _, v := range l {
+func toInt(s []string) []int {
+	var n []int
+	for _, v := range s {
 		i, err := strconv.Atoi(v)
 		check(err)
-		r = append(r, i)
+		n = append(n, i)
 	}
-	return r
+	return n
 }
 
 func check(e error) {
