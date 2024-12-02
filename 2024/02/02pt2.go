@@ -19,7 +19,7 @@ func Pt2(){
         line := scanner.Text()
 		s := strings.Split(line, " ")
 		nums := toInts(s)
-		result := dampender(nums)
+		result := dampener(nums)
 		if result {
 			score++
 		}
@@ -28,7 +28,7 @@ func Pt2(){
 	fmt.Println("2pt2:", score)
 }
 
-func dampender(levels []int) bool {
+func dampener(levels []int) bool {
     if isSafe(levels) {
         return true
     }
