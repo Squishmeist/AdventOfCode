@@ -16,4 +16,5 @@ func main() {
     }
 
     three.Pt1()
+    three.Pt2()
 }
