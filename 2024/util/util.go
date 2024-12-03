@@ -17,12 +17,12 @@ func AssertNoError(err error){
 
 func date() (int, int) {
 	date := time.Now()
-	return 2021, date.Day()
+	return date.Year(), date.Day()
 }
 
 func dir(year int, day int, body []byte) {
     // Create the directory structure
-    dir := fmt.Sprintf("%d/%02d", year, day)
+    dir := fmt.Sprintf("%02d", day)
     err := os.MkdirAll(dir, os.ModePerm)
     AssertNoError(err)
 
