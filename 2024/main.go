@@ -1,7 +1,7 @@
 package main
 
 import (
-	three "2024/03"
+	four "2024/04"
 	"2024/util"
 	"flag"
 )
@@ -15,6 +15,5 @@ func main() {
         return
     }
 
-    three.Pt1()
-    three.Pt2()
+    four.Pt1()
 }
