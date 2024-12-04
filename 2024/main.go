@@ -16,4 +16,5 @@ func main() {
     }
 
     four.Pt1()
+    four.Pt2()
 }
