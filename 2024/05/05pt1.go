@@ -10,7 +10,7 @@ import (
 )
 
 func Pt1(){
-	file, err := os.Open("./05/05e.txt")
+	file, err := os.Open("./05/05.txt")
     util.AssertNoError(err)
     defer file.Close()
 
@@ -20,55 +20,11 @@ func Pt1(){
     scanner := bufio.NewScanner(file)
     for scanner.Scan() {
         line := scanner.Text()
-
-        rules, updates = split(line, rules, updates)
-    }
+        rules, updates = split(line, rules, updates)    }
     util.AssertNoError(scanner.Err())
+    fmt.Println("5pt1:", rules)
 	fmt.Println("5pt1:", check(rules, updates))
 }
-
-func check(rules []int, updates [][]int) int {
-    fmt.Println(rules)
-    fmt.Println(updates)
-    score := 0
-
-    for _, update := range updates {
-        allowed := true
-        
-        for x := 0; x < len(update)-1; x++ {
-            currentNum := update[x]
-            nextNum := update[x+1]
-            currentIndex := -1
-            nextIndex := -1
-
-            // Find the indices of currentNum and nextNum in rules
-            for y, rule := range rules {
-                if rule == currentNum {
-                    currentIndex = y
-                }
-                if rule == nextNum {
-                    nextIndex = y
-                }
-                // Break early if both indices are found
-                if currentIndex != -1 && nextIndex != -1 {
-                    break
-                }
-            }
-    
-            if currentIndex == -1 || nextIndex == -1 || currentIndex > nextIndex {
-                allowed = false
-            }
-        }
-
-        if allowed {
-            score += update[middleIndex(update)]
-        }
-    }
-
-
-    return score
-}
-
 
 
 func split(line string, rules []int, updates [][]int) ([]int, [][]int) {
@@ -106,31 +62,83 @@ func sortRules(rules []int, first, second int) []int {
         }
     }
 
-    // Insert first if it's not in the list
-    if firstIndex == -1 {
-        rules = append(rules, 0) // Increase the length of rules by 1
-        copy(rules[1:], rules)   // Shift elements to the right
-        rules[0] = first
-        firstIndex = 0
+    if firstIndex != -1 && secondIndex != -1 {
+        if firstIndex > secondIndex {
+            rules = removeAtPosition(rules, firstIndex)
+            rules = insertAtPosition(rules, first, secondIndex)
+        }
     }
 
-    // Insert second if it's not in the list
-    if secondIndex == -1 {
-        rules = append(rules, 0) // Increase the length of rules by 1
-        copy(rules[firstIndex+2:], rules[firstIndex+1:]) // Shift elements to the right
-        rules[firstIndex+1] = second
-        secondIndex = firstIndex + 1
+    if firstIndex == -1 && secondIndex == -1 {
+        rules = append(rules, first)
+        rules = append(rules, second)
     }
 
-    // Ensure first is before second
-    if firstIndex > secondIndex {
-        // Remove first from its current position
-        rules = append(rules[:firstIndex], rules[firstIndex+1:]...)
-        // Insert first before second
-        rules = append(rules[:secondIndex], append([]int{first}, rules[secondIndex:]...)...)
+    if firstIndex != -1 && secondIndex == -1 {
+        rules = insertAtPosition(rules, second, firstIndex + 1)
+    }
+
+    if firstIndex == -1 && secondIndex != -1 {
+        rules = insertAtPosition(rules, first, secondIndex)
     }
 
     return rules
+}
+
+func removeAtPosition(slice []int, position int) []int {
+    if position < 0 || position >= len(slice) {
+        return slice // or handle the error as needed
+    }
+    return append(slice[:position], slice[position+1:]...)
+}
+
+func insertAtPosition(slice []int, value int, position int) []int {
+    if position < 0 || position > len(slice) {
+        return slice // or handle the error as needed
+    }
+    slice = append(slice, 0) // Increase the length of the slice by 1
+    copy(slice[position+1:], slice[position:]) // Shift elements to the right
+    slice[position] = value
+    return slice
+}
+
+func check(rules []int, updates [][]int) int {
+    score := 0
+
+    for _, update := range updates {
+        allowed := true
+        
+        for x := 0; x < len(update)-1; x++ {
+            currentNum := update[x]
+            nextNum := update[x+1]
+            currentIndex := -1
+            nextIndex := -1
+
+            // Find the indices of currentNum and nextNum in rules
+            for y, rule := range rules {
+                if rule == currentNum {
+                    currentIndex = y
+                }
+                if rule == nextNum {
+                    nextIndex = y
+                }
+                // Break early if both indices are found
+                if currentIndex != -1 && nextIndex != -1 {
+                    break
+                }
+            }
+    
+            if currentIndex == -1 || nextIndex == -1 || currentIndex > nextIndex {
+                allowed = false
+            }
+        }
+
+        if allowed {
+            score += update[middleIndex(update)]
+        }
+    }
+
+    return score
 }
 
 func splitUpdate(line string) []int { 
