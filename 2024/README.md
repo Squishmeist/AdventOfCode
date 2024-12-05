@@ -1,10 +1,10 @@
 # 2024
 
-Create .config and add session cookie
+Create .config and add aoc session cookie
 
 ## Commands
 
-Create dir & save input to .txt
+Create todays folder & save input to .txt
 
 ```sh
 go run main.go -input
@@ -17,7 +17,7 @@ go run main.go -input
 | 01  |    ⭐    |    ⭐    |
 | 02  |    ⭐    |    ⭐    |
 | 03  |    ⭐    |    ⭐    |
-| 04  |          |
+| 04  |    ⭐    |    ⭐    |
 | 05  |          |
 | 06  |          |
 | 07  |          |
