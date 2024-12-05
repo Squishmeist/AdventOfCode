@@ -16,8 +16,8 @@ func Pt2(){
 
     scanner := bufio.NewScanner(file)
     for scanner.Scan() {
-        line := scanner.Text()
-        fmt.Println(line)
+        // line := scanner.Text()
+        // fmt.Println(line)
     }
     util.AssertNoError(scanner.Err())
 	fmt.Println("5pt2:", score)
