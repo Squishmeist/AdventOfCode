@@ -16,5 +16,5 @@ func main() {
     }
 
     seven.Pt1()
-    // seven.Pt2()
+    seven.Pt2()
 }
