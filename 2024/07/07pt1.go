@@ -12,7 +12,7 @@ import (
 type calibrationType = [][]int
 
 func Pt1(){
-	file, err := os.Open("./07/07e.txt")
+	file, err := os.Open("./07/07.txt")
     util.AssertNoError(err)
     defer file.Close()
 
@@ -43,31 +43,43 @@ func checkOp(calibrations calibrationType) int {
     return score
 }
 
+
 func checkCombination(numbers []int, target int) bool {
     if len(numbers) == 0 {
         return false
     }
 
-    if len(numbers) == 1 {
-        return numbers[0] == target
+    return evaluate(numbers, target, 0, numbers[0])
+}
+
+
+func evaluate(numbers []int, target, index, current int) bool {
+    if index == len(numbers)-1 {
+        return current == target
     }
 
-    for i := 1; i < len(numbers); i++ {
-        left := numbers[:i]
-        right := numbers[i:]
+    operators := []string{"+", "*"}
 
-        if checkCombination(left, target-right[0]) || checkCombination(left, target/right[0]) {
-            return true
+    for _, op := range operators {
+        next := numbers[index+1]
+        newCurrent := 0
+
+        switch op {
+            case "+":
+                newCurrent = current + next
+            case "*":
+                newCurrent = current * next
+            default: 
+                panic("Invalid operator")
         }
 
-        if checkCombination(right, target-left[0]) || checkCombination(right, target/left[0]) {
+        if evaluate(numbers, target, index+1, newCurrent) {
             return true
         }
     }
 
     return false
 }
-
 
 func process(line string) []int{
     nums := []int{}
