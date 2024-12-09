@@ -9,7 +9,7 @@ import (
 )
 
 func Pt1(){
-	file, err := os.Open("./09/09e.txt")
+	file, err := os.Open("./09/09.txt")
     util.AssertNoError(err)
     defer file.Close()
 
@@ -21,12 +21,11 @@ func Pt1(){
     }
 
     diskMap := getDiskMap(files)
-    fmt.Println("get:", diskMap)
-    diskMap2 := leftToRight(diskMap)
-    fmt.Println("process:", diskMap2)
+    diskMap = leftToRight(diskMap)    
 
     util.AssertNoError(scanner.Err())
-    fmt.Println("9pt1:", checksum(diskMap2))
+    fmt.Println("9pt1:", checksum(diskMap))
+
 }
 
 func checksum (diskMap []int) int {
@@ -39,56 +38,45 @@ func checksum (diskMap []int) int {
     }
     return sum
 }
-func leftToRight(diskMap [][]int) []int {
-    result := []int{}
+
+func leftToRight(diskMap []int) []int {
 
     for {
-        leftmostMinusOne := -1
-        rightmostNonMinusOne := -1
-        rowLeft := -1
-        rowRight := -1
+        leftmostIndex := -1
+        rightmostIndex := -1
 
-        // Find the leftmost -1 and rightmost non--1
+        // Find the leftmost -1
         for i := 0; i < len(diskMap); i++ {
-            for j := 0; j < len(diskMap[i]); j++ {
-                if diskMap[i][j] == -1 && leftmostMinusOne == -1 {
-                    leftmostMinusOne = j
-                    rowLeft = i
-                }
-                if diskMap[i][j] != -1 {
-                    rightmostNonMinusOne = j
-                    rowRight = i
-                }
+            if diskMap[i] == -1 {
+                leftmostIndex = i
+                break
             }
         }
 
-        // If no more -1 are found or no non--1 characters are found, break the loop
-        if leftmostMinusOne == -1 || rightmostNonMinusOne == -1 || (rowLeft == rowRight && leftmostMinusOne >= rightmostNonMinusOne) {
+        // Find the rightmost non -1
+        for i := len(diskMap) - 1; i >= 0; i-- {
+            if diskMap[i] != -1 {
+                rightmostIndex = i
+                break
+            }
+        }
+
+        // If no leftmost -1 or rightmost non -1 is found, break the loop
+        if leftmostIndex == -1 || rightmostIndex == -1 {
             break
         }
 
-        // Replace the leftmost -1 with the rightmost non--1 character
-        if rowLeft != -1 && rowRight != -1 {
-            result = append(result, diskMap[rowRight][rightmostNonMinusOne])
-            diskMap[rowLeft][leftmostMinusOne] = diskMap[rowRight][rightmostNonMinusOne]
-            diskMap[rowRight][rightmostNonMinusOne] = -1
-        }
+        // Replace the leftmost -1 with the rightmost non -1 and remove the rightmost non -1
+        diskMap[leftmostIndex] = diskMap[rightmostIndex]
+        diskMap = append(diskMap[:rightmostIndex], diskMap[rightmostIndex+1:]...)
     }
 
-    // Append remaining non--1 elements to the result list
-    for i := 0; i < len(diskMap); i++ {
-        for j := 0; j < len(diskMap[i]); j++ {
-            if diskMap[i][j] != -1 {
-                result = append(result, diskMap[i][j])
-            }
-        }
-    }
-
-    return result
+    return diskMap
 }
-func getDiskMap(files string) [][]int{
+
+func getDiskMap(files string) []int{
     count := 0
-    diskMap := [][]int{}
+    diskMap := []int{}
 
     for i, n := range files {
         num := toInt(string(n))
@@ -103,7 +91,7 @@ func getDiskMap(files string) [][]int{
                 file = append(file, -1)
             }
 
-            diskMap = append(diskMap, file)
+            diskMap = append(diskMap, file...)
         }
         
         if i % 2 == 0 {
