@@ -21,31 +21,30 @@ func Pt1(){
     }
 
     diskMap := getDiskMap(files)
-    diskMap = leftToRight(diskMap)    
+    diskMap = moveFile(diskMap)    
 
     util.AssertNoError(scanner.Err())
     fmt.Println("9pt1:", checksum(diskMap))
-
 }
 
 func checksum (diskMap []int) int {
     sum := 0
     for i, n := range diskMap {
         if(n == -1){
-            break
+            continue
         }
         sum += i * n
     }
     return sum
 }
 
-func leftToRight(diskMap []int) []int {
+func moveFile(diskMap []int) []int {
 
     for {
         leftmostIndex := -1
         rightmostIndex := -1
 
-        // Find the leftmost -1
+        // leftmost -1
         for i := 0; i < len(diskMap); i++ {
             if diskMap[i] == -1 {
                 leftmostIndex = i
@@ -53,7 +52,7 @@ func leftToRight(diskMap []int) []int {
             }
         }
 
-        // Find the rightmost non -1
+        // rightmost non -1
         for i := len(diskMap) - 1; i >= 0; i-- {
             if diskMap[i] != -1 {
                 rightmostIndex = i
@@ -61,12 +60,12 @@ func leftToRight(diskMap []int) []int {
             }
         }
 
-        // If no leftmost -1 or rightmost non -1 is found, break the loop
+        // if neither found, break the loop
         if leftmostIndex == -1 || rightmostIndex == -1 {
             break
         }
 
-        // Replace the leftmost -1 with the rightmost non -1 and remove the rightmost non -1
+        // swap leftmost -1 with rightmost non -1
         diskMap[leftmostIndex] = diskMap[rightmostIndex]
         diskMap = append(diskMap[:rightmostIndex], diskMap[rightmostIndex+1:]...)
     }
