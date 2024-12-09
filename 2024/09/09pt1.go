@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"strings"
 )
 
 func Pt1(){
@@ -23,68 +22,88 @@ func Pt1(){
 
     diskMap := getDiskMap(files)
     fmt.Println("get:", diskMap)
-    diskMap = leftToRight(diskMap)
-    fmt.Println("process:", diskMap)
+    diskMap2 := leftToRight(diskMap)
+    fmt.Println("process:", diskMap2)
 
     util.AssertNoError(scanner.Err())
-    fmt.Println("9pt1:", checksum(diskMap))
+    fmt.Println("9pt1:", checksum(diskMap2))
 }
 
-func checksum (diskMap string) int {
+func checksum (diskMap []int) int {
     sum := 0
     for i, n := range diskMap {
-        if(string(n) == "."){
+        if(n == -1){
             break
         }
-
-        num := toInt(string(n))
-        sum += i * num
+        sum += i * n
     }
     return sum
 }
+func leftToRight(diskMap [][]int) []int {
+    result := []int{}
 
-func leftToRight(diskMap string) string {
     for {
-        leftmostDot := strings.Index(diskMap, ".")
-        rightmostNonDot := -1
+        leftmostMinusOne := -1
+        rightmostNonMinusOne := -1
+        rowLeft := -1
+        rowRight := -1
 
-        // Find the rightmost non-dot character
-        for i := len(diskMap) - 1; i >= 0; i-- {
-            if diskMap[i] != '.' {
-                rightmostNonDot = i
-                break
+        // Find the leftmost -1 and rightmost non--1
+        for i := 0; i < len(diskMap); i++ {
+            for j := 0; j < len(diskMap[i]); j++ {
+                if diskMap[i][j] == -1 && leftmostMinusOne == -1 {
+                    leftmostMinusOne = j
+                    rowLeft = i
+                }
+                if diskMap[i][j] != -1 {
+                    rightmostNonMinusOne = j
+                    rowRight = i
+                }
             }
         }
 
-        if leftmostDot == -1 || rightmostNonDot == -1 || leftmostDot >= rightmostNonDot {
+        // If no more -1 are found or no non--1 characters are found, break the loop
+        if leftmostMinusOne == -1 || rightmostNonMinusOne == -1 || (rowLeft == rowRight && leftmostMinusOne >= rightmostNonMinusOne) {
             break
         }
 
-        diskMap = diskMap[:leftmostDot] + string(diskMap[rightmostNonDot]) + diskMap[leftmostDot+1:rightmostNonDot] + "." + diskMap[rightmostNonDot+1:]
+        // Replace the leftmost -1 with the rightmost non--1 character
+        if rowLeft != -1 && rowRight != -1 {
+            result = append(result, diskMap[rowRight][rightmostNonMinusOne])
+            diskMap[rowLeft][leftmostMinusOne] = diskMap[rowRight][rightmostNonMinusOne]
+            diskMap[rowRight][rightmostNonMinusOne] = -1
+        }
     }
 
-    return diskMap
-}
+    // Append remaining non--1 elements to the result list
+    for i := 0; i < len(diskMap); i++ {
+        for j := 0; j < len(diskMap[i]); j++ {
+            if diskMap[i][j] != -1 {
+                result = append(result, diskMap[i][j])
+            }
+        }
+    }
 
-func getDiskMap(files string) string{
+    return result
+}
+func getDiskMap(files string) [][]int{
     count := 0
-    diskMap := ""
+    diskMap := [][]int{}
 
     for i, n := range files {
         num := toInt(string(n))
-        file := ""
+        file := []int{}
 
         if num != 0 {
             for j := 0; j < num; j++ {
-                
                 if i % 2 == 0 {
-                    file += strconv.Itoa(count)
+                    file = append(file, count)
                     continue
                 }
-                file += "."
+                file = append(file, -1)
             }
 
-            diskMap += file
+            diskMap = append(diskMap, file)
         }
         
         if i % 2 == 0 {
