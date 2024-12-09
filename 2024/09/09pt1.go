@@ -21,48 +21,79 @@ func Pt1(){
         files = scanner.Text()
     }
 
-    process(files)
+    diskMap := getDiskMap(files)
+    fmt.Println("get:", diskMap)
+    diskMap = leftToRight(diskMap)
+    fmt.Println("process:", diskMap)
+
     util.AssertNoError(scanner.Err())
-    fmt.Println("9pt1:", 0)
+    fmt.Println("9pt1:", checksum(diskMap))
 }
 
-func process(files string){
-    count := 0
-    parts := strings.Split(files, "")
-
-    fmt.Println("parts", parts)
-
-    for i, n := range parts {
-
-        num := toInt(n)
-        s := ""
-
-        for j := 0; j < num; j++ {
-
-            if i % 2 == 0 {
-                s += strconv.Itoa(count)
-                continue
-            }
-
-            s += "."
-
+func checksum (diskMap string) int {
+    sum := 0
+    for i, n := range diskMap {
+        if(string(n) == "."){
+            break
         }
 
-        parts[i] = s
+        num := toInt(string(n))
+        sum += i * num
+    }
+    return sum
+}
 
-        if i % 2 == 0 {
-            if count + 1 == 10 {
-                count = 0
+func leftToRight(diskMap string) string {
+    for {
+        leftmostDot := strings.Index(diskMap, ".")
+        rightmostNonDot := -1
+
+        // Find the rightmost non-dot character
+        for i := len(diskMap) - 1; i >= 0; i-- {
+            if diskMap[i] != '.' {
+                rightmostNonDot = i
+                break
             }
-            count++
         }
-    
+
+        if leftmostDot == -1 || rightmostNonDot == -1 || leftmostDot >= rightmostNonDot {
+            break
+        }
+
+        diskMap = diskMap[:leftmostDot] + string(diskMap[rightmostNonDot]) + diskMap[leftmostDot+1:rightmostNonDot] + "." + diskMap[rightmostNonDot+1:]
     }
 
-    fmt.Println("count", count)
-    fmt.Println("parts", parts)
-
+    return diskMap
 }
+
+func getDiskMap(files string) string{
+    count := 0
+    diskMap := ""
+
+    for i, n := range files {
+        num := toInt(string(n))
+        file := ""
+
+        if num != 0 {
+            for j := 0; j < num; j++ {
+                
+                if i % 2 == 0 {
+                    file += strconv.Itoa(count)
+                    continue
+                }
+                file += "."
+            }
+
+            diskMap += file
+        }
+        
+        if i % 2 == 0 {
+            count++
+        }
+    }
+    return diskMap
+}
+
 
 func toInt(s string)int{
 	i, err := strconv.Atoi(s)
