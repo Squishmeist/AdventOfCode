@@ -1,7 +1,7 @@
 package main
 
 import (
-	eight "2024/08"
+	ten "2024/10"
 	"2024/util"
 	"flag"
 )
@@ -15,6 +15,6 @@ func main() {
         return
     }
 
-    eight.Pt1()
-    eight.Pt2()
+    ten.Pt1()
+    ten.Pt2()
 }
