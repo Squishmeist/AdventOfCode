@@ -1,28 +1,23 @@
-package eight
+package ten
 
 import (
 	"2024/util"
 	"bufio"
 	"fmt"
 	"os"
-	"strings"
 )
 
 func Pt1(){
-	file, err := os.Open("./08/08e.txt")
+	file, err := os.Open("./10/10e.txt")
     util.AssertNoError(err)
     defer file.Close()
-
-    grid := [][]string{}
 
     scanner := bufio.NewScanner(file)
     for scanner.Scan() {
         line := scanner.Text()
-        grid = append(grid, strings.Split(line, ""))
+        fmt.Println(line)
     }
 
-    fmt.Println(grid)
-
     util.AssertNoError(scanner.Err())
-    fmt.Println("8pt1:", 0)
+    fmt.Println("10pt1:", 0)
 }
